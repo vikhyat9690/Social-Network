@@ -39,7 +39,7 @@ $profile_picture = !empty($user['profile_picture']) ? "./uploads/" . $user['prof
             <a href="profile.php">Profile</a>
         </div>
         <div class="img-logout">
-            <a href="auth/logout.php">Logout</a>
+            <a href="auth/logout.php" class="logout">Logout</a>
             <a href="profile.php"><img src="<?php echo $profile_picture; ?>" alt="" style="width: 30px; height: 30px; border-radius: 50%;"></a>
         </div>
     </nav>

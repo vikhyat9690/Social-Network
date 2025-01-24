@@ -144,7 +144,15 @@ nav .img-logout img {
     height: 100px;
     border-radius: 50%;
     border: 5px solid #4CAF50;
+    object-fit:cover;
 }
 .profile-block h4 {
     margin-top: 10px;
+}
+
+.img-logout{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
