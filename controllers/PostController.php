@@ -30,7 +30,7 @@ class PostController
             // Show delete button only for the post owner
             $deleteButton = ($post['user_id'] == $_SESSION['user_id']) ?
                 "<button class='delete-btn' data-post-id='{$post['id']}'>Delete</button>" : "";
-
+            
             echo "<div class='post'>
                         <p><strong>{$post['username']}</strong></p>
                         <p>{$post['content']}</p>";
@@ -40,32 +40,50 @@ class PostController
             echo "<button class='like-btn' data-post-id='{$post['id']}' data-like-status='1'>Like ({$post['likes']})</button>
                       <button class='like-btn' data-post-id='{$post['id']}' data-like-status='0'>Dislike ({$post['dislikes']})</button>
                       {$deleteButton}
-                      </div>";
+                      </div><hr>";
         }
     }
 
     public static function deletePost($postId, $userId)
-    {
-        global $conn;
-        // Check if the post belongs to the user
-        $stmt = $conn->prepare("SELECT * FROM posts WHERE id = ? AND user_id = ?");
+{
+    global $conn;
+
+    // Begin transaction
+    $conn->begin_transaction();
+
+    try {
+        // Verify ownership of the post
+        $stmt = $conn->prepare("SELECT id FROM posts WHERE id = ? AND user_id = ?");
         $stmt->bind_param('ii', $postId, $userId);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            // First, delete the likes associated with the post
-            $stmt = $conn->prepare("DELETE FROM likes WHERE post_id = ?");
-            $stmt->bind_param('i', $postId);
-            $stmt->execute();
-
-            // Then, delete the post
-            $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
-            $stmt->bind_param('i', $postId);
-            return $stmt->execute();
+        if ($result->num_rows === 0) {
+            // Rollback transaction if the post doesn't belong to the user
+            $conn->rollback();
+            return ['success' => false, 'message' => 'Unauthorized or post not found'];
         }
-        return false; // Post does not belong to the user
+
+        // Delete associated likes
+        $stmt = $conn->prepare("DELETE FROM likes WHERE post_id = ?");
+        $stmt->bind_param('i', $postId);
+        $stmt->execute();
+
+        // Delete the post
+        $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
+        $stmt->bind_param('i', $postId);
+        $stmt->execute();
+
+        // Commit transaction
+        $conn->commit();
+        return ['success' => true, 'message' => 'Post deleted successfully'];
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $conn->rollback();
+        return ['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()];
     }
+}
+
 }
 
 //Handle post creation
@@ -90,18 +108,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(['status' => 'error']);
     }
+}
 
-    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-        session_start();
-        parse_str(file_get_contents("php://input"), $_DELETE); // Parse DELETE request data
-        $postId = $_DELETE['postId'];
-        $userId = $_SESSION['user_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    session_start();
+    parse_str(file_get_contents("php://input"), $_DELETE); // Parse DELETE request data
+    $postId = $_DELETE['postId'];
+    $userId = $_SESSION['user_id'];
 
-        if (PostController::deletePost($postId, $userId)) {
-            echo json_encode(['status' => 'success']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Unable to delete the post.']);
-        }
+    if (PostController::deletePost($postId, $userId)) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Unable to delete the post.']);
     }
 }
 

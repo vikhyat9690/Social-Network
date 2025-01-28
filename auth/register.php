@@ -9,16 +9,19 @@
     $profile_picture = null;
 
     if(isset($_FILES['profile_picture']['name'])) {
-        $file_ext = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
-        $file_name = time() . '_profile' . $file_ext;
-        $target = '../uploads' . $file_name;
+        // Extract file extension
+    $file_ext = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
+    
+    // Generate unique file name with extension
+    $file_name = time() . '_profile.' . $file_ext;
+    $target = '../uploads/' . $file_name;
 
-        //Move file to the target library
-        if(move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target)) {
-            $profile_picture = $file_name;
-        } else {
-            die("Error in uploading in the profile picture");
-        }
+    // Move uploaded file to the target directory
+    if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target)) {
+        $profile_picture = $file_name;
+    } else {
+        die ("Error in uploading profile picture.");
+    }
     }
 
     $stmt = $conn->prepare("INSERT INTO USERS (USERNAME, EMAIL, PASSWORD, PROFILE_PICTURE, BIO) VALUES (?, ?, ?, ?, ?)");

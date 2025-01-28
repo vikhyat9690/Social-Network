@@ -1,0 +1,110 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: white; /* Light blue background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Main Container */
+.main-container {
+    background-color: #ffffff; /* White container */
+    width: 400px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    text-align: center;
+    border: 1px solid #90caf9; /* Light blue border for consistency */
+}
+
+.main-container h2 {
+    font-size: 1.8rem;
+    color: #1565c0; /* Dark blue for headings */
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #b3e5fc; /* Soft blue border */
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Arial', sans-serif;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #1565c0; /* Dark blue focus border */
+    box-shadow: 0 0 5px rgba(21, 101, 192, 0.5);
+}
+
+/* File Input */
+input.profile_pic {
+    padding: 5px;
+}
+
+/* Button Styling */
+button {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-family: 'Arial', sans-serif;
+    color: #ffffff; /* White text */
+    background-color: #1565c0; /* Dark blue button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #0d47a1; /* Even darker blue on hover */
+}
+
+/* Link Styling */
+p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+p a {
+    color: #1565c0; /* Dark blue for links */
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+p a:hover {
+    color: #0d47a1; /* Darker blue on hover */
+}
+
+/* Response Message */
+#registerResponse {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #d32f2f; /* Red for error messages */
+}

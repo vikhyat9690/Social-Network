@@ -1,6 +1,8 @@
 $(document).ready(function() {
+
     //handle post submission
     $('#postForm').submit(function (e) {
+
         e.preventDefault();
         const formData = new FormData(this);
 
@@ -74,7 +76,7 @@ $(document).on('click', '.delete-btn', function () {
             success: function (response) {
                 const result = JSON.parse(response);
                 if (result.status === 'success') {
-                    $(`#post-${postId}`).remove(); // Remove the post from the DOM
+                    $(`.post-${postId}`).remove(); // Remove the post from the DOM
                 } else {
                     alert('Error: ' + result.message);
                 }

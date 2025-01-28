@@ -3,7 +3,7 @@
 <head>
     <title>Document</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="./assets/styles.css">
+    <link rel="stylesheet" href="./assets/register.css">
 </head>
 <body>
     <div class="main-container">

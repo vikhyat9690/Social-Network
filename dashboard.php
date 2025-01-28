@@ -1,6 +1,4 @@
 <?php
-
-
 session_start();
 require "./db.php";
 if (!isset($_SESSION['user_id'])) {
@@ -8,9 +6,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 $user_id = $_SESSION['user_id'];
-$bio = !empty($users['bio']) ? $users['bio'] : "This user has not updated their bio yet.";
 
-$stmt = $conn->prepare("SELECT profile_picture FROM users WHERE id = ?");
+$conn->begin_transaction();
+
+//For profile_picture
+$stmt = $conn->prepare("SELECT profile_picture, bio, username FROM users WHERE id = ?");
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -18,60 +18,79 @@ $user = $stmt->get_result()->fetch_assoc();
 // $profile_picture = $user['profile_picture'] ? "./uploads/" . $user['profile_picture'] : "default_pic.png";
 $profile_picture = !empty($user['profile_picture']) ? "./uploads/" . $user['profile_picture'] : "./assests/default_pic.png";
 
+$username = !empty($user['username']) ? $user['username'] : $_SESSION['username'];
+
+$bio = !empty($user['bio']) ? $user['bio'] : "User has not updated bio yet."
+
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="./assets/dashboard.css">
 </head>
 
 <body>
-    <nav>
-        <div>
-            <img class="logo-dashboard" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqnL3QZSmErCRvtBDMv1pBq14E76QipOotaA&s" alt="">
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img class="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqnL3QZSmErCRvtBDMv1pBq14E76QipOotaA&s" alt="Logo">
         </div>
-        <div class="links">
+        <div class="navbar-links">
             <a href="dashboard.php">Home</a>
             <a href="profile.php">Profile</a>
         </div>
-        <div class="img-logout">
+        <div class="navbar-profile">
+            <a href="profile.php">
+                <img src="<?php echo $profile_picture; ?>" alt="Profile Picture">
+            </a>
             <a href="auth/logout.php" class="logout">Logout</a>
-            <a href="profile.php"><img src="<?php echo $profile_picture; ?>" alt="" style="width: 30px; height: 30px; border-radius: 50%;"></a>
         </div>
     </nav>
 
-    <div class="greet-container">
-        <h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
-    </div>
+    <header class="welcome-header">
+        <h1>Welcome, <?php echo $username; ?>!</h1>
+        <p>Your personalized dashboard</p>
+    </header>
 
-    <div class="post-container-main">
-        <div class="post-form">
-            <div class="profile-block">
+    <main class="dashboard-content">
+        <section class="profile-section">
+            <div class="profile-card">
                 <img src="<?php echo $profile_picture; ?>" alt="Profile Picture">
-                <h3><?php echo $_SESSION['username']; ?></h3>
-                <h4><?php echo $bio; ?></h4>
-                <p>View your profile to update details</p>
+                <h2><?php echo $username; ?></h2>
+                <p class="bio"><?php echo $bio; ?></p>
+                <a href="profile.php" class="update-profile">Update Profile</a>
             </div>
-            <form id="postForm" enctype="multipart/form-data">
-                <textarea name="content" placeholder="What's on your mind?"></textarea><br>
-                <input type="file" name="image" accept="image/*"><br>
-                <button type="submit">Post</button>
-            </form>
-            <div id="postMessage"></div>
+        </section>
 
-        </div>
+        <section class="post-section">
+            <div class="post-form">
+                <h2>Create a Post</h2>
+                <form id="postForm" enctype="multipart/form-data">
+                    <textarea name="content" placeholder="What's on your mind?"></textarea>
+                    <input type="file" name="image" accept="image/*">
+                    <button type="submit">Post</button>
+                </form>
+                <div id="postMessage"></div>
+            </div>
+        </section>
 
-        <div class="display-post-main">
+        <section class="posts-display">
+            <h2>Recent Posts</h2><hr><br><br>
             <div id="postContainer">
                 Post will be displayed here..
             </div>
-        </div>
+        </section>
+    </main>
 
-    </div>
+    <footer class="footer">
+        <p>&copy; <?php echo date("Y"); ?> Your Company. All Rights Reserved.</p>
+    </footer>
+
     <script src="./scripts/post.js"></script>
 </body>
 
