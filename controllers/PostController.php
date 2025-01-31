@@ -30,10 +30,10 @@ class PostController
             // Show delete button only for the post owner
             $deleteButton = ($post['user_id'] == $_SESSION['user_id']) ?
                 "<button class='delete-btn' data-post-id='{$post['id']}'>Delete</button>" : "";
-            
+
             echo "<div class='post'>
-                        <p><strong>{$post['username']}</strong></p>
-                        <p>{$post['content']}</p>";
+                        <p><strong>{$post['username']}</strong></p><br>
+                        <p>{$post['content']}</p><br>";
             if ($post['image_path']) {
                 echo "<img src='../uploads/{$post['image_path']}' alt='Post Image' style='max-width: 100%;'>";
             }
