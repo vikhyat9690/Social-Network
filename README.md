@@ -126,9 +126,11 @@ project/
 ### 2. Profile Section
 ![Profile Section](./screenshots/profile.png)
 
-### 3. Create a Post
-![Create a Post](./screenshots/create_post.png)
+### 4. Authentication (Step 1)
+![Sign Up](./screenshots/signup.png)
 
+### 5. Authentication (Step 2)
+![Login](./screenshots/login.png)
 ---
 
 ## Developer
