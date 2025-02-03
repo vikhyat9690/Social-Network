@@ -46,7 +46,7 @@ $bio = !empty($user['bio']) ? $user['bio'] : "User has not updated bio yet."
         </div>
         <div class="navbar-profile">
             <a href="profile.php">
-                <img src="<?php echo $profile_picture; ?>" alt="Profile Picture">
+                <img src="<?php echo $profile_picture; ?>" alt="logo">
             </a>
             <a href="auth/logout.php" class="logout">Logout</a>
         </div>
@@ -60,7 +60,7 @@ $bio = !empty($user['bio']) ? $user['bio'] : "User has not updated bio yet."
     <main class="dashboard-content">
         <section class="profile-section">
             <div class="profile-card">
-                <img src="<?php echo $profile_picture; ?>" alt="Profile Picture">
+                <img src="<?php echo $profile_picture; ?>" alt="logo">
                 <h2><?php echo $username; ?></h2>
                 <p class="bio"><?php echo $bio; ?></p>
                 <a href="profile.php" class="update-profile">Update Profile</a>

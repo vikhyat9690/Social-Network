@@ -49,7 +49,7 @@ if ($profile_picture) {
 
 if ($stmt->execute()) {
     // Redirect back to the dashboard after successful update
-    header("Location: ../dashboard.php");
+    header("Location: ../profile.php");
     exit();
 } else {
     echo "Error updating user profile: " . $stmt->error;
